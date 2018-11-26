@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:13306/auth
+    driver-class-name: com.mysql.jdbc.Driver
+    username: auth-user
+    password: auth-password
+    initialization-mode: never
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.MySQLDialect
+      format_sql: true
