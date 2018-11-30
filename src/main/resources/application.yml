@@ -3,7 +3,7 @@ spring:
     url: jdbc:mysql://localhost:13306/auth
     driver-class-name: com.mysql.jdbc.Driver
     username: auth-user
-    password: auth-password
+    password: '{cipher}b3273d904ce53b859298a6638fa4a243edeba847f78bed84457748d4ad3c280c'
     initialization-mode: never
 
   jpa:
@@ -11,3 +11,13 @@ spring:
       ddl-auto: update
       dialect: org.hibernate.dialect.MySQLDialect
       format_sql: true
+server:
+  ssl:
+    enabled: true
+    key-store-type: JKS
+    key-store: classpath:keystore.jks
+    key-store-password: '{cipher}280151b48966d925900d7dc3c7800cf1a2d0562722842b1357d854ab68fdb4a2'
+    key-alias: selfsigned
+    key-password: '{cipher}9c6232e0d7ff391677f5a48965236e2d623d4cb6a2d2cebce4cdc6c32bc4cf5c'
+  port: 18443
+      

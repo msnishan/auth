@@ -1,4 +1,4 @@
-package com.msnishan.auth.user.domain;
+package com.msnishan.auth.base.rest.message.common;
 
 import java.util.Objects;
 
