@@ -3,21 +3,31 @@ spring:
     url: jdbc:mysql://localhost:13306/auth
     driver-class-name: com.mysql.jdbc.Driver
     username: auth-user
-    password: '{cipher}b3273d904ce53b859298a6638fa4a243edeba847f78bed84457748d4ad3c280c'
+    password: '{cipher}a29f73d5df6ac36fac700ba4bc28775b504762142f1cd6cc6a4edc45a6fa1b8e'
     initialization-mode: never
 
   jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: update
-      dialect: org.hibernate.dialect.MySQLDialect
+      use-new-id-generator-mappings: true
+      ddl-auto: none
+      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+      storage_engine: innodb
       format_sql: true
+  main:
+    allow-bean-definition-overriding: true
 server:
   ssl:
     enabled: true
     key-store-type: JKS
     key-store: classpath:keystore.jks
-    key-store-password: '{cipher}280151b48966d925900d7dc3c7800cf1a2d0562722842b1357d854ab68fdb4a2'
+    key-store-password: '{cipher}ae1d8860808824715b4c2503607a6bb2366df2123c3a1ca0dc4b9e0a322ab181'
     key-alias: selfsigned
-    key-password: '{cipher}9c6232e0d7ff391677f5a48965236e2d623d4cb6a2d2cebce4cdc6c32bc4cf5c'
+    key-password: '{cipher}ae1d8860808824715b4c2503607a6bb2366df2123c3a1ca0dc4b9e0a322ab181'
   port: 18443
+logging:
+  level:
+    org.springframework: DEBUG
+#     org.springframework.security.web.FilterChainProxy: DEBUG
+
       
