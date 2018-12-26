@@ -2,15 +2,15 @@ package com.msnishan.auth.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -22,7 +22,6 @@ import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHand
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 @Configuration
@@ -38,11 +37,8 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
     @Autowired
     private AuthenticationManager authenticationManager;
 
-//    @Autowired
-//    private UserDetailsService userDetailsService;
-
-//    @Autowired
-//    private PasswordEncoder oauthClientPasswordEncoder;
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Bean
     public TokenStore tokenStore() {
@@ -56,7 +52,7 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
-        oauthServer.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()").passwordEncoder(oauthClientPasswordEncoder());
+        oauthServer.tokenKeyAccess("permitAll()").checkTokenAccess("permitAll()").passwordEncoder(oauthClientPasswordEncoder());
     }
 
     @Override
@@ -66,7 +62,7 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
-        endpoints.tokenStore(tokenStore()).authenticationManager(authenticationManager);
+        endpoints.tokenStore(tokenStore()).authenticationManager(authenticationManager).userDetailsService(userDetailsService);
     }
 
     @Bean
@@ -79,11 +75,12 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 
     @Bean
     public PasswordEncoder oauthClientPasswordEncoder() {
-        return new BCryptPasswordEncoder(4);
+
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     @Bean
     public PasswordEncoder userPasswordEncoder() {
-        return new BCryptPasswordEncoder(8);
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }

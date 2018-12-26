@@ -1,12 +1,25 @@
 package com.msnishan.auth.base.domain;
 
 import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @MappedSuperclass
-public class BaseEntity {
+public abstract class BaseEntity implements Serializable {
+
+    @Id
+    @Column(name = "ID", nullable = false, unique = true)
+    private Long id;
+
+    @Column(name = "REQUEST_ID", nullable = false)
+    private String requestId;
+
+    @Column(name = "COMPANY_ID", nullable = false)
+    private String companyId;
 
     @Column(name = "CREATED_DATETIME")
     private LocalDateTime createdDatetime;
@@ -20,78 +33,110 @@ public class BaseEntity {
     @Column(name = "UPDATED_BY")
     private String updatedBy;
 
-    @Column(name = "IS_ENABLED")
+    @Column(name = "IS_ENABLED", nullable = false)
     private Boolean isEnabled;
+
+    @Version
+    @Column(name = "VERSION", nullable = false)
+    private Long version;
+
+    public BaseEntity(Long id) {
+        this.id = id;
+    }
 
     public BaseEntity() {
     }
 
-    public LocalDateTime getCreatedDatetime() {
-        return createdDatetime;
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
 
     public void setCreatedDatetime(LocalDateTime createdDatetime) {
         this.createdDatetime = createdDatetime;
     }
 
-    public LocalDateTime getUpdatedDatetime() {
-        return updatedDatetime;
-    }
-
     public void setUpdatedDatetime(LocalDateTime updatedDatetime) {
         this.updatedDatetime = updatedDatetime;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
     }
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
-    public String getUpdatedBy() {
-        return updatedBy;
-    }
-
     public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
-    }
-
-    public Boolean getEnabled() {
-        return isEnabled;
     }
 
     public void setEnabled(Boolean enabled) {
         isEnabled = enabled;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public LocalDateTime getCreatedDatetime() {
+        return createdDatetime;
+    }
+
+    public LocalDateTime getUpdatedDatetime() {
+        return updatedDatetime;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public Boolean getEnabled() {
+        return isEnabled;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BaseEntity that = (BaseEntity) o;
-        return Objects.equals(createdDatetime, that.createdDatetime) &&
-                Objects.equals(updatedDatetime, that.updatedDatetime) &&
-                Objects.equals(createdBy, that.createdBy) &&
-                Objects.equals(updatedBy, that.updatedBy) &&
-                Objects.equals(isEnabled, that.isEnabled);
+        if (!(o instanceof BaseEntity))
+            return false;
+
+        BaseEntity other = (BaseEntity) o;
+
+        if (id.equals(other.getId())) {
+            return true;
+        }
+
+        // equivalence by id
+        return id.equals(other.getId());
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(createdDatetime, updatedDatetime, createdBy, updatedBy, isEnabled);
-    }
-
-    @Override
-    public String toString() {
-        return "BaseEntity{" +
-                "createdDatetime=" + createdDatetime +
-                ", updatedDatetime=" + updatedDatetime +
-                ", createdBy='" + createdBy + '\'' +
-                ", updatedBy='" + updatedBy + '\'' +
-                ", isEnabled=" + isEnabled +
-                '}';
+        if (id != null) {
+            return id.hashCode();
+        } else {
+            return super.hashCode();
+        }
     }
 }

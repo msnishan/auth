@@ -1,0 +1,70 @@
+basePackage: com.msnishan.auth
+models:
+  Address:
+    package: com.msnishan.auth.dto
+    type: DTO
+    attributes:
+      addressLine1:
+        type: String
+      addressLine2:
+        type: String
+      pinCode:
+        type: long
+      city:
+        type: String
+      county:
+        type: String
+      state:
+        type: String
+      country:
+        type: String
+      isoCountry:
+        type: String
+      primary:
+        type: boolean
+  Name:
+    package: com.msnishan.auth.dto
+    type: DTO
+    attributes:
+      firstName:
+        type: String
+      middleName:
+        type: String
+      lastName:
+        type: String
+  Group:
+    package: com.msnishan.auth.dto
+    type: DTO
+    attributes:
+      groupId:
+        type: String
+      description:
+        type: String
+  Grant:
+    package: com.msnishan.auth.dto
+    type: DTO
+    attributes:
+      grantId:
+        type: String
+      description:
+        type: String
+      groupId:
+        type: String
+      group:
+        type: "$Group"
+  User:
+    package: com.msnishan.auth.dto
+    type: DTO
+    attributes:
+      name:
+        type: "$Name"
+      mailId:
+        type: String
+      password:
+        type: String
+      status:
+        type: String
+      addresses:
+        type: "$Address:Set"
+      grants:
+        type: "String:Set"
