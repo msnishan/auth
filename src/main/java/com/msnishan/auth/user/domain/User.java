@@ -1,6 +1,7 @@
 package com.msnishan.auth.user.domain;
 
 import com.msnishan.auth.base.domain.BaseEntity;
+import com.msnishan.auth.base.domain.PosEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,29 +14,36 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Entity
 @Table(name = "AUTH_USER")
-public class User extends BaseEntity implements UserDetails {
+public class User extends PosEntity implements UserDetails {
 
-    @Column(name = "PASSWORD")
-    @NotNull
-    private String password;
 
     @Column(name = "EMAIL", unique = true)
     @NotNull
     private String email;
 
-    @OneToMany(
-            mappedBy = "user",
-            fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private Set<UserGrant> userGrants = new HashSet<>();
+    @Column(name = "PASSWORD")
+    @NotNull
+    private String password;
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    @Column(name = "EMPLOYEE_ID", unique = true)
+    @NotNull
+    private String employeeId;
+
+    @Column(name = "DESIGNATION")
+    @NotNull
+    private String designation;
 
     @OneToMany(
             mappedBy = "user",
@@ -44,6 +52,13 @@ public class User extends BaseEntity implements UserDetails {
             orphanRemoval = true
     )
     private Set<Address> addresses = new HashSet<>();
+
+    @OneToMany(
+            mappedBy = "user",
+            fetch = FetchType.EAGER,
+            orphanRemoval = true
+    )
+    private Set<FeatureAccessEmployee> featureAccessEmployees = new HashSet<>();
 
     public User(Long id) {
         super(id);
@@ -54,11 +69,11 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.getUserGrants().stream()
-                .map(UserGrant::getGrant)
-                .map(Grant::getGrantId)
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+
+    return Stream.of(designation)
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList());
+
     }
 
     public String getPassword() {
@@ -102,16 +117,6 @@ public class User extends BaseEntity implements UserDetails {
         this.email = email;
     }
 
-    public void addUserGrant(UserGrant userGrant) {
-        userGrants.add(userGrant);
-        userGrant.setUser(this);
-    }
-
-    public void removeUserGrant(UserGrant userGrant) {
-        userGrants.remove(userGrant);
-        userGrant.setUser(null);
-    }
-
     public void addAddress(Address address) {
         addresses.add(address);
         address.setUser(this);
@@ -122,12 +127,40 @@ public class User extends BaseEntity implements UserDetails {
         address.setUser(null);
     }
 
-    public Set<UserGrant> getUserGrants() {
-        return userGrants;
+    public void addFeatureAccessEmployee(FeatureAccessEmployee featureAccessEmployee) {
+        featureAccessEmployees.add(featureAccessEmployee);
+        featureAccessEmployee.setUser(this);
+    }
+
+    public void removeFeatureAccessEmployee(FeatureAccessEmployee featureAccessEmployee) {
+        featureAccessEmployees.remove(featureAccessEmployee);
+        featureAccessEmployee.setUser(null);
     }
 
     public Set<Address> getAddresses() {
         return addresses;
+    }
+
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
+    public Set<FeatureAccessEmployee> getFeatureAccessEmployees() {
+        return featureAccessEmployees;
+    }
+
+    public Set<FeatureAccess> getFeatureAccesses() {
+        System.out.println(featureAccessEmployees);
+        return getFeatureAccessEmployees().stream().map(FeatureAccessEmployee::getFeature).collect(Collectors.toSet());
     }
 
     @Override

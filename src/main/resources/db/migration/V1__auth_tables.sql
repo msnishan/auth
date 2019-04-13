@@ -66,7 +66,7 @@ create table if not exists ClientDetails (
 drop table if exists auth_user;
 CREATE TABLE `auth_user` (
   `id` bigint(20) NOT NULL,
-  `company_id` varchar(255) NOT NULL,
+  `pos_id` varchar(255) NOT NULL,
   `created_by` varchar(255) DEFAULT NULL,
   `created_datetime` datetime DEFAULT NULL,
   `is_enabled` bit(1) NOT NULL,
@@ -75,15 +75,17 @@ CREATE TABLE `auth_user` (
   `updated_datetime` datetime DEFAULT NULL,
   `version` bigint(20) NOT NULL,
   `email` varchar(255) NOT NULL,
+  `employee_id` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `designation` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_klvc3dss72qnlrjp2bai055mw` (`email`)
+  UNIQUE KEY `UK_klvc3dss72qnlrjp2bai055mw` (`employee_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 drop table if exists auth_address;
 CREATE TABLE `auth_address` (
   `id` bigint(20) NOT NULL,
-  `company_id` varchar(255) NOT NULL,
+  `pos_id` varchar(255) NOT NULL,
   `created_by` varchar(255) DEFAULT NULL,
   `created_datetime` datetime DEFAULT NULL,
   `is_enabled` bit(1) NOT NULL,
@@ -100,16 +102,15 @@ CREATE TABLE `auth_address` (
   `pin_code` bigint(20) DEFAULT NULL,
   `state` varchar(255) DEFAULT NULL,
   `type` varchar(255) NOT NULL,
-  `user_email` varchar(255) DEFAULT NULL,
+  `employee_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `FK6tq8i9j835mjfl8xuarb72316` (`user_email`),
-  CONSTRAINT `FK6tq8i9j835mjfl8xuarb72316` FOREIGN KEY (`user_email`) REFERENCES `auth_user` (`email`)
+  KEY `FK6tq8i9j835mjfl8xuarb72316` (`employee_id`),
+  CONSTRAINT `FK6tq8i9j835mjfl8xuarb72316` FOREIGN KEY (`employee_id`) REFERENCES `auth_user` (`employee_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-drop table if exists auth_group;
-CREATE TABLE `auth_group` (
+drop table if exists feature_access;
+CREATE table `feature_access` (
   `id` bigint(20) NOT NULL,
-  `company_id` varchar(255) NOT NULL,
   `created_by` varchar(255) DEFAULT NULL,
   `created_datetime` datetime DEFAULT NULL,
   `is_enabled` bit(1) NOT NULL,
@@ -117,16 +118,18 @@ CREATE TABLE `auth_group` (
   `updated_by` varchar(255) DEFAULT NULL,
   `updated_datetime` datetime DEFAULT NULL,
   `version` bigint(20) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `group_id` varchar(255) NOT NULL,
+  `feature_id` varchar(255) NOT NULL,
+  `feature_name` varchar(255) NOT NULL,
+  `feature_url` varchar(255) NOT NULL,
+  `feature_method` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_h2600eq48svty67oybnmrg4v8` (`group_id`)
+  UNIQUE KEY `UK_feature_access` (`feature_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-drop table if exists auth_grant;
-CREATE TABLE `auth_grant` (
+drop table if exists feature_access_employee;
+CREATE TABLE `feature_access_employee` (
   `id` bigint(20) NOT NULL,
-  `company_id` varchar(255) NOT NULL,
+  `pos_id` varchar(255) NOT NULL,
   `created_by` varchar(255) DEFAULT NULL,
   `created_datetime` datetime DEFAULT NULL,
   `is_enabled` bit(1) NOT NULL,
@@ -134,33 +137,13 @@ CREATE TABLE `auth_grant` (
   `updated_by` varchar(255) DEFAULT NULL,
   `updated_datetime` datetime DEFAULT NULL,
   `version` bigint(20) NOT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `grant_id` varchar(255) NOT NULL,
-  `group_id` varchar(255) DEFAULT NULL,
+  `feature_id` varchar(255) DEFAULT NULL,
+  `employee_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_ol9m33apae0ygo9srfkcn9yqy` (`grant_id`),
-  KEY `FKscnnf3s7awbrhbbw9mgq6s8uj` (`group_id`),
-  CONSTRAINT `FKscnnf3s7awbrhbbw9mgq6s8uj` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-drop table if exists auth_user_grant;
-CREATE TABLE `auth_user_grant` (
-  `id` bigint(20) NOT NULL,
-  `company_id` varchar(255) NOT NULL,
-  `created_by` varchar(255) DEFAULT NULL,
-  `created_datetime` datetime DEFAULT NULL,
-  `is_enabled` bit(1) NOT NULL,
-  `request_id` varchar(255) NOT NULL,
-  `updated_by` varchar(255) DEFAULT NULL,
-  `updated_datetime` datetime DEFAULT NULL,
-  `version` bigint(20) NOT NULL,
-  `grant_id` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `UKh2osps5bpt6u2jif7wt7h0v5h` (`email`,`grant_id`),
-  KEY `FKhxpwy3j19mjcn392t4tkpxcy1` (`grant_id`),
-  CONSTRAINT `FKf8n47xg27r0kjqnawdwq42ppm` FOREIGN KEY (`email`) REFERENCES `auth_user` (`email`),
-  CONSTRAINT `FKhxpwy3j19mjcn392t4tkpxcy1` FOREIGN KEY (`grant_id`) REFERENCES `auth_grant` (`grant_id`)
+  UNIQUE KEY `UKh2osps5bpt6u2jif7wt7h0v5h` (`employee_id`,`feature_id`),
+  KEY `feature_access_key` (`feature_id`),
+  CONSTRAINT `FKf8n47xg27r0kjqnawdwq42ppm` FOREIGN KEY (`employee_id`) REFERENCES `auth_user` (`employee_id`),
+  CONSTRAINT `FKhxpwy3j19mjcn392t4tkpxcy1` FOREIGN KEY (`feature_id`) REFERENCES `feature_access` (`feature_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 

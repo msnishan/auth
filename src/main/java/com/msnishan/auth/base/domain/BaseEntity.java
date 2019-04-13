@@ -6,7 +6,6 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @MappedSuperclass
 public abstract class BaseEntity implements Serializable {
@@ -17,9 +16,6 @@ public abstract class BaseEntity implements Serializable {
 
     @Column(name = "REQUEST_ID", nullable = false)
     private String requestId;
-
-    @Column(name = "COMPANY_ID", nullable = false)
-    private String companyId;
 
     @Column(name = "CREATED_DATETIME")
     private LocalDateTime createdDatetime;
@@ -51,10 +47,6 @@ public abstract class BaseEntity implements Serializable {
         this.requestId = requestId;
     }
 
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
     public void setCreatedDatetime(LocalDateTime createdDatetime) {
         this.createdDatetime = createdDatetime;
     }
@@ -81,10 +73,6 @@ public abstract class BaseEntity implements Serializable {
 
     public String getRequestId() {
         return requestId;
-    }
-
-    public String getCompanyId() {
-        return companyId;
     }
 
     public LocalDateTime getCreatedDatetime() {

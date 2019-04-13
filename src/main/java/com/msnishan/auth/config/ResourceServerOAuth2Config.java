@@ -17,11 +17,11 @@ public class ResourceServerOAuth2Config extends ResourceServerConfigurerAdapter 
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-        .requestMatchers().antMatchers("/auth/users/**")
+        .requestMatchers().antMatchers("/auth/users/**", "/auth/features/**")
         .and()
         .authorizeRequests()
-        .antMatchers("/auth/users").access("#oauth2.hasScope('read') and hasRole('ROLE_ADMIN')")
-        .antMatchers("/auth/users/**").authenticated();
+        .antMatchers("/auth/users", "/auth/features").access("#oauth2.hasScope('read')")
+        .antMatchers("/auth/users/**", "/auth/features/**").authenticated();
     }
 
     @Override

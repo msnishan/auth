@@ -32,26 +32,18 @@ models:
         type: String
       lastName:
         type: String
-  Group:
+  FeatureAccess:
     package: com.msnishan.auth.dto
     type: DTO
     attributes:
-      groupId:
+      featureAccessId:
         type: String
-      description:
+      featureName:
         type: String
-  Grant:
-    package: com.msnishan.auth.dto
-    type: DTO
-    attributes:
-      grantId:
+      featureUrl:
         type: String
-      description:
+      method:
         type: String
-      groupId:
-        type: String
-      group:
-        type: "$Group"
   User:
     package: com.msnishan.auth.dto
     type: DTO
@@ -66,5 +58,9 @@ models:
         type: String
       addresses:
         type: "$Address:Set"
-      grants:
-        type: "String:Set"
+      featureAccess:
+        type: "$FeatureAccess:Set"
+      employeeId:
+        type: String
+      designation:
+        type: String

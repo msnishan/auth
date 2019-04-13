@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/auth/users")
@@ -38,7 +41,7 @@ public class UserController {
                     paramType = "body", type = "body")
     )
     public ResponseEntity<ResponseEnvelope> createUser(@ApiParam(name = "User") @RequestBody RequestEnvelope request) {
-
+        addRequestId(request);
         UserDTO user = EnvelopeConverter.extractFromEnvelop(request, UserDTO.class);
         user = DtoFactory.createUserDTO(userService.createUser(request.getContext(), user));
         ResponseEnvelope responseEnvelope = EnvelopeConverter
@@ -47,10 +50,19 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<ResponseEnvelope> findGroup(@HttpRequestContext RequestContext context, @PathVariable("userId") String userId) {
+    @ApiOperation(value = "Get User", notes = "Get User.", response=UserDTO.class)
+    public ResponseEntity<ResponseEnvelope> findUser(@ApiIgnore @HttpRequestContext RequestContext context, @PathVariable("userId") String userId) {
         UserDTO user = DtoFactory.createUserDTO(userService.findUserById(context, userId));
         ResponseEnvelope responseEnvelope = EnvelopeConverter
                 .createResponseEnvelop(context, null, "1200", user);
-        return new ResponseEntity<>(responseEnvelope, HttpStatus.CREATED);
+        return new ResponseEntity<>(responseEnvelope, HttpStatus.OK);
     }
+
+    private void addRequestId(RequestEnvelope request) {
+        if (request.getContext().getRequestId() == null) {
+            request.getContext().setRequestId(UUID.randomUUID().toString());
+        }
+    }
+
+
 }

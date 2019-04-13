@@ -41,7 +41,7 @@ public class Address extends BaseEntity {
     private String type;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_EMAIL", referencedColumnName = "EMAIL")
+    @JoinColumn(name = "EMPLOYEE_ID", referencedColumnName = "EMPLOYEE_ID")
     private User user;
 
     public Address(Long id) {

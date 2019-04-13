@@ -11,4 +11,4 @@ INSERT INTO `auth`.`oauth_client_details`
 `additional_information`,
 `autoapprove`)
 VALUES
-("service-gym","rest-api-user","$2a$04$xl95D9bpcbIMqNyfHZnGYOYBUQma27Dsr.x/qAaYVompAR9man5Fu","write,read","password,authorization_code,refresh_token,implicit","http://localhost:8080/dashboard","USER",10800,2592000,NULL,"");
+("service-gym","rest-api-user","{bcrypt}$2a$04$xl95D9bpcbIMqNyfHZnGYOYBUQma27Dsr.x/qAaYVompAR9man5Fu","write,read","password,authorization_code,refresh_token,implicit","http://localhost:8080/dashboard","USER",10800,2592000,NULL,"");
